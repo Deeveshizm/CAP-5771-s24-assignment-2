@@ -9,7 +9,7 @@ from sklearn.preprocessing import StandardScaler
 from itertools import cycle, islice
 import scipy.io as io
 from scipy.cluster.hierarchy import dendrogram, linkage  #
-
+from scipy.spatial.distance import pdist, squareform
 # import plotly.figure_factory as ff
 import math
 from sklearn.cluster import AgglomerativeClustering
@@ -27,9 +27,20 @@ Recall from lecture that agglomerative hierarchical clustering is a greedy itera
 # the question asked.
 
 
-def data_index_function():
-    return None
-
+def data_index_function(data, index_set_I, index_set_J):
+    # Extract points for the two clusters
+    cluster_I = data[index_set_I, :]
+    cluster_J = data[index_set_J, :]
+    
+    # Compute all pairwise distances between points in the two clusters
+    pairwise_distances = pdist(np.vstack((cluster_I, cluster_J)), metric='euclidean')
+    
+    # Convert to a square form distance matrix and extract the inter-cluster distances
+    distance_matrix = squareform(pairwise_distances)
+    inter_cluster_distances = distance_matrix[:len(cluster_I), len(cluster_I):]
+    
+    # The single link dissimilarity is the minimum of these inter-cluster distances
+    return np.min(inter_cluster_distances)
 
 def compute():
     answers = {}
@@ -37,19 +48,30 @@ def compute():
     """
     A.	Load the provided dataset “hierachal_toy_data.mat” using the scipy.io.loadmat function.
     """
-
+    h_toy = io.loadmat('hierarchical_toy_data.mat')
     # return value of scipy.io.loadmat()
-    answers["3A: toy data"] = {}
+    answers["3A: toy data"] = h_toy
 
     """
     B.	Create a linkage matrix Z, and plot a dendrogram using the scipy.hierarchy.linkage and scipy.hierachy.dendrogram functions, with “single” linkage.
     """
+    X = h_toy['X']
+    Z = linkage(X, method='single')
+
+    D = dendrogram(Z)
 
     # Answer: NDArray
-    answers["3B: linkage"] = np.zeros(1)
+    answers["3B: linkage"] = Z
 
+
+    plt.figure(figsize=(10, 7))
+    dendrogram(Z)
+    plt.title('Hierarchical Clustering Dendrogram (Single linkage)')
+    plt.xlabel('Sample index')
+    plt.ylabel('Distance')
+    plt.show()
     # Answer: the return value of the dendogram function, dicitonary
-    answers["3B: dendogram"] = {}
+    answers["3B: dendogram"] = D
 
     """
     C.	Consider the merger of the cluster corresponding to points with index sets {I={8,2,13}} J={1,9}}. At what iteration (starting from 0) were these clusters merged? That is, what row does the merger of A correspond to in the linkage matrix Z? The rows count from 0. 
