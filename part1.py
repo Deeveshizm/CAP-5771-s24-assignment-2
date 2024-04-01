@@ -30,13 +30,16 @@ In the first task, you will explore how k-Means perform on datasets with diverse
 # Change the arguments and return according to 
 # the question asked. 
 
-def fit_kmeans(data_and_labels, k):
+def fit_kmeans(data_and_labels, k, randomize=False):
     X = data_and_labels[0]
     y = data_and_labels[1]
     standardize = StandardScaler()
     X_std = standardize.fit_transform(X=X)
     
-    model = KMeans(n_clusters=k, init='random', random_state=42)
+    if randomize==False:
+        model = KMeans(n_clusters=k, init='random', random_state=42)
+    else:
+        model = KMeans(n_clusters=k, init='random')
     model.fit(X_std, y)
     return model.labels_
 
@@ -114,11 +117,11 @@ def compute():
     # dct value: return a dictionary of one or more abbreviated dataset names (zero or more elements) 
     # and associated k-values with correct clusters.  key abbreviations: 'nc', 'nm', 'bvv', 'add', 'b'. 
     # The values are the list of k for which there is success. Only return datasets where the list of cluster size k is non-empty.
-    dct = answers["1C: cluster successes"] = {"xy": [3,4], "zx": [2]} 
+    dct = answers["1C: cluster successes"] = {"bvv": [2, 3], "add": [2, 3], "b": [2, 3]} 
 
     # dct value: return a list of 0 or more dataset abbreviations (list has zero or more elements, 
     # which are abbreviated dataset names as strings)
-    dct = answers["1C: cluster failures"] = ["xy"]
+    dct = answers["1C: cluster failures"] = ["nc", "nm"]
 
     """
     D. Repeat 1.C a few times and comment on which (if any) datasets seem to be sensitive to the choice of initialization for the k=2,3 cases. You do not need to add the additional plots to your report.
@@ -129,18 +132,19 @@ def compute():
 
     k_clusters = [2, 3]
 
-    for dataset_name, data in answers["1A: datasets"].items():
-        value = {}
-        for k in k_clusters:
-            y_kmeans = fit_kmeans(data, k)
-            value[k] = y_kmeans
-        prediction_labels[dataset_name] = [[data[0], data[1]], value]
+    for i in range(5):
+        for dataset_name, data in answers["1A: datasets"].items():
+            value = {}
+            for k in k_clusters:
+                y_kmeans = fit_kmeans(data, k, randomize=True)
+                value[k] = y_kmeans
+            prediction_labels[dataset_name] = [[data[0], data[1]], value]
+        myplt.plot_part1C(prediction_labels, f'1_d_{i}')
 
-    myplt.plot_part1C(prediction_labels, '1_d')
     # dct value: list of dataset abbreviations
     # Look at your plots, and return your answers.
     # The plot is part of your report, a pdf file name "report.pdf", in your repository.
-    dct = answers["1D: datasets sensitive to initialization"] = [""]
+    dct = answers["1D: datasets sensitive to initialization"] = ["nc", "nm"]
 
     return answers
 

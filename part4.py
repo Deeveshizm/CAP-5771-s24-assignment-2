@@ -49,18 +49,18 @@ def fit_modified(data_and_labels, linkage_method):
     
     # Calculate the rate of change of distances between successive merges
     distances = Z[:, 2]
-    # rate_of_change = np.diff(distances)
+    rate_of_change = np.diff(distances)
     
-    distances_sorted = np.sort(distances)
-    index_of_elbow = np.argmax(np.diff(distances_sorted))
-    cutoff_distance = distances_sorted[index_of_elbow]
+    # distances_sorted = np.sort(distances)
+    index_of_elbow = np.argmax(rate_of_change)
+    cutoff_distance = distances[index_of_elbow]
     
     # Determine the number of clusters as those merges that occur below the cut-off distance
-    k = np.sum(distances < cutoff_distance) + 1
-    model = AgglomerativeClustering(n_clusters=k, linkage=linkage_method)
+    # k = np.sum(distances < cutoff_distance) + 1
+    model = AgglomerativeClustering(n_clusters=None, distance_threshold=cutoff_distance,linkage=linkage_method)
     model.fit(X_std, y)
     y_pred = model.fit_predict(X_std)
-    return y_pred, k
+    return y_pred
 
 
 def compute():
@@ -131,7 +131,7 @@ def compute():
     myplt.plot_part1C(prediction_labels, '4_b')
 
     # dct value: list of dataset abbreviations (see 1.C)
-    dct = answers["4B: cluster successes"] = [""]
+    dct = answers["4B: cluster successes"] = ["nc", "nm"]
 
     """
     C.	There are essentially two main ways to find the cut-off point for breaking the diagram: specifying the number of clusters and specifying a maximum distance. The latter is challenging to optimize for without knowing and/or directly visualizing the dendrogram, however, sometimes simple heuristics can work well. The main idea is that since the merging of big clusters usually happens when distances increase, we can assume that a large distance change between clusters means that they should stay distinct. Modify the function from part 1.A to calculate a cut-off distance before classification. Specifically, estimate the cut-off distance as the maximum rate of change of the distance between successive cluster merges (you can use the scipy.hierarchy.linkage function to calculate the linkage matrix with distances). Apply this technique to all the datasets and make a plot similar to part 4.B.
@@ -147,9 +147,8 @@ def compute():
     for dataset_name, data in answers["4A: datasets"].items():
         value = {}
         for link in linkage:
-            y_kmeans, k = fit_modified(data, linkage_method=link)
+            y_kmeans = fit_modified(data, linkage_method=link)
             value[link] = y_kmeans
-            print(f'dataset_nm: {dataset_name}, {link}, {k}')
         prediction_labels[dataset_name] = [[data[0], data[1]], value]
 
     myplt.plot_part1C(prediction_labels, '4_c')

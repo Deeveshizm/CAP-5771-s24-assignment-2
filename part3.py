@@ -48,7 +48,7 @@ def compute():
     """
     A.	Load the provided dataset “hierachal_toy_data.mat” using the scipy.io.loadmat function.
     """
-    h_toy = io.loadmat('hierarchical_toy_data.mat')
+    h_toy = io.loadmat('/Users/deeveshizm/Desktop/University_Class_Work/Data_Mining/CAP-5771-s24-assignment-2/hierarchical_toy_data.mat')
     # return value of scipy.io.loadmat()
     answers["3A: toy data"] = h_toy
 
@@ -78,28 +78,29 @@ def compute():
     """
 
     # Answer type: integer
-    answers["3C: iteration"] = -1
+    answers["3C: iteration"] = 4
 
     """
     D.	Write a function that takes the data and the two index sets {I,J} above, and returns the dissimilarity given by single link clustering using the Euclidian distance metric. The function should output the same value as the 3rd column of the row found in problem 2.C.
     """
     # Answer type: a function defined above
     answers["3D: function"] = data_index_function
-
+    # ans_d = data_index_function(X, [8, 2, 13], [1, 9])
+    # print(ans_d)
     """
     E.	In the actual algorithm, deciding which clusters to merge should consider all of the available clusters at each iteration. List all the clusters as index sets, using a list of lists, 
     e.g., [{0,1,2},{3,4},{5},{6},…],  that were available when the two clusters in part 2.D were merged.
     """
 
     # List the clusters. the [{0,1,2}, {3,4}, {5}, {6}, ...] represents a list of lists.
-    answers["3E: clusters"] = [{0, 0}, {0, 0}]
+    answers["3E: clusters"] = [[0], [1, 9], [2, 8, 13], [3], [4], [5], [6, 14], [7], [10], [11], [12]] 
 
     """
     F.	Single linked clustering is often criticized as producing clusters where “the rich get richer”, that is, where one cluster is continuously merging with all available points. Does your dendrogram illustrate this phenomenon?
     """
 
     # Answer type: string. Insert your explanation as a string.
-    answers["3F: rich get richer"] = ""
+    answers["3F: rich get richer"] = "yes, because we start with treating each element as a separate cluster and then merge the closest clusters. The dendrogram shows that the cluster with the most points is continuously merging with other clusters."
 
     return answers
 
