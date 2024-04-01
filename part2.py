@@ -87,7 +87,7 @@ def compute():
     for k in cluster_k:
         sse = fit_kmeans(blobs, k, method='manual')
         SSE.append(sse)
-        ans_2c.append((k, sse))
+        ans_2c.append([k, sse])
     # dct value: a list of tuples, e.g., [[0, 100.], [1, 200.]]
     # Each tuple is a (k, SSE) pair
     plt.plot(cluster_k, SSE)
@@ -106,7 +106,7 @@ def compute():
     for k in cluster_k:
         sse = fit_kmeans(blobs, k, method='auto') 
         SSE_d.append(sse)
-        ans_2d.append((k, sse))
+        ans_2d.append([k, sse])
 
     plt.plot(cluster_k, SSE_d)
     plt.xlabel('k')
