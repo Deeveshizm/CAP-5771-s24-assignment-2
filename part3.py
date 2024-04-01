@@ -48,7 +48,7 @@ def compute():
     """
     A.	Load the provided dataset “hierachal_toy_data.mat” using the scipy.io.loadmat function.
     """
-    h_toy = io.loadmat('/Users/deeveshizm/Desktop/University_Class_Work/Data_Mining/CAP-5771-s24-assignment-2/hierarchical_toy_data.mat')
+    h_toy = io.loadmat('hierarchical_toy_data.mat')
     # return value of scipy.io.loadmat()
     answers["3A: toy data"] = h_toy
 
@@ -64,12 +64,12 @@ def compute():
     answers["3B: linkage"] = Z
 
 
-    plt.figure(figsize=(10, 7))
-    dendrogram(Z)
-    plt.title('Hierarchical Clustering Dendrogram (Single linkage)')
-    plt.xlabel('Sample index')
-    plt.ylabel('Distance')
-    plt.show()
+    # plt.figure(figsize=(10, 7))
+    # # dendrogram(Z)
+    # plt.title('Hierarchical Clustering Dendrogram (Single linkage)')
+    # plt.xlabel('Sample index')
+    # plt.ylabel('Distance')
+    # plt.show()
     # Answer: the return value of the dendogram function, dicitonary
     answers["3B: dendogram"] = D
 
